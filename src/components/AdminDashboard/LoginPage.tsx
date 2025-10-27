@@ -1,0 +1,52 @@
+import React from 'react';
+import styles from './LoginPage.module.css';
+
+interface LoginPageProps {
+  loginForm: { id: string; password: string };
+  setLoginForm: (form: { id: string; password: string }) => void;
+  handleLogin: () => void;
+}
+
+export default function LoginPage({ loginForm, setLoginForm, handleLogin }: LoginPageProps) {
+  return (
+    <div className={styles.container}>
+      <div className={styles.loginBox}>
+        <div className={styles.logoSection}>
+          <div className={styles.logoPlaceholder}>
+            <img src="/assets/admin/adminlogo.svg" alt="TreeHeal" className={styles.logoImage} />
+          </div>
+          <p className={styles.subtitle}>관리자 로그인</p>
+        </div>
+
+        <div className={styles.formSection}>
+          <div className={styles.inputGroup}>
+            <label className={styles.label}>아이디</label>
+            <input
+              type="text"
+              value={loginForm.id}
+              onChange={(e) => setLoginForm({ ...loginForm, id: e.target.value })}
+              placeholder="아이디를 입력해주세요"
+              className={styles.input}
+            />
+          </div>
+          <div className={styles.inputGroup}>
+            <label className={styles.label}>비밀번호</label>
+            <input
+              type="password"
+              value={loginForm.password}
+              onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
+              placeholder="비밀번호를 입력해주세요"
+              className={styles.input}
+            />
+          </div>
+          <p className={styles.errorText}>
+            아이디 혹은 비밀번호가 잘못되어 있습니다.
+          </p>
+          <button onClick={handleLogin} className={styles.loginButton}>
+            로그인
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}

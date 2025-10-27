@@ -1,0 +1,19 @@
+.dashboard {
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
+.mainContent {
+  margin-left: 256px;
+  padding: 2rem;
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 1.875rem;
+  font-weight: bold;
+  color: #1f2937;
+}

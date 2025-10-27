@@ -1,0 +1,246 @@
+.container {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.tab {
+  flex: 1;
+  padding: 1.25rem 2rem;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  text-align: center;
+}
+
+.tab:hover {
+  color: #374151;
+}
+
+.tabActive {
+  color: #10b981;
+  border-bottom-color: #10b981;
+  font-weight: 600;
+}
+
+.content {
+  padding: 2.5rem;
+}
+
+/* Section Styles */
+.section {
+  margin-bottom: 3rem;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+/* Setting Group */
+.settingGroup {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  align-items: start;
+}
+
+.fieldRow:last-child {
+  margin-bottom: 0;
+}
+
+.fieldLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  padding-top: 0.5rem;
+}
+
+.fieldHint {
+  font-size: 0.75rem;
+  color: #6b7280;
+  font-weight: normal;
+  margin-top: 0.25rem;
+  line-height: 1.4;
+}
+
+.inputField {
+  width: 100%;
+  max-width: 600px;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.inputField:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.textareaField {
+  width: 100%;
+  max-width: 600px;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  outline: none;
+  transition: all 0.2s;
+  font-family: inherit;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.textareaField:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.fileUploadArea {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.uploadButton {
+  padding: 0.5rem 1.25rem;
+  background-color: #3b82f6;
+  color: white;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: inline-block;
+}
+
+.uploadButton:hover {
+  background-color: #2563eb;
+}
+
+.fileInput {
+  display: none;
+}
+
+.fileName {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* Terms Tab Styles */
+.termsGroup {
+  margin-bottom: 2rem;
+}
+
+.termsLabel {
+  display: block;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.75rem;
+}
+
+.termsTextarea {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  outline: none;
+  transition: all 0.2s;
+  font-family: inherit;
+  resize: vertical;
+  line-height: 1.6;
+  min-height: 120px;
+}
+
+.termsTextarea:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+/* Survey Tab Styles */
+.surveyGroup {
+  margin-bottom: 2rem;
+}
+
+.surveyLabel {
+  display: block;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.75rem;
+}
+
+.surveyInput {
+  width: 100%;
+  max-width: 800px;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.surveyInput:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+/* Save Button Container */
+.saveButtonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.saveButton {
+  padding: 0.75rem 3rem;
+  background-color: #3b82f6;
+  color: white;
+  border-radius: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  min-width: 140px;
+}
+
+.saveButton:hover {
+  background-color: #2563eb;
+}
+
+.saveButton:active {
+  background-color: #1d4ed8;
+}

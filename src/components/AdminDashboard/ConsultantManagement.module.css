@@ -1,0 +1,465 @@
+.container {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  padding: 2rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.searchSection {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.searchBox {
+  position: relative;
+}
+
+.searchIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+}
+
+.searchInput {
+  padding-left: 2.5rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  outline: none;
+  width: 200px;
+}
+
+.searchInput:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.searchButton {
+  padding: 0.5rem 1.25rem;
+  background-color: #1f2937;
+  color: white;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+}
+
+.newButton {
+  padding: 0.5rem 1.25rem;
+  background-color: #3b82f6;
+  color: white;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.newButton:hover {
+  background-color: #2563eb;
+}
+
+.dataCount {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+}
+
+/* Grid Layout */
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.card {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.card:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.cardImage {
+  width: 100%;
+  height: 180px;
+  background-color: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.consultantImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatarPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e0e7ff 0%, #dbeafe 100%);
+}
+
+.avatarEmoji {
+  font-size: 4rem;
+}
+
+.cardContent {
+  padding: 1.25rem;
+  text-align: center;
+}
+
+.consultantName {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.consultantPhone {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 1rem;
+}
+
+.cardActions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.editButton {
+  padding: 0.375rem 0.875rem;
+  background-color: white;
+  color: #3b82f6;
+  border: 1px solid #3b82f6;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.editButton:hover {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.deleteButton {
+  padding: 0.375rem 0.875rem;
+  background-color: white;
+  color: #ef4444;
+  border: 1px solid #ef4444;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.deleteButton:hover {
+  background-color: #ef4444;
+  color: white;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.paginationButton {
+  padding: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+}
+
+.paginationButton:hover {
+  background-color: #f3f4f6;
+}
+
+.paginationIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #4b5563;
+}
+
+.pageNumber {
+  padding: 0.25rem 0.75rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+}
+
+.pageNumber:hover {
+  background-color: #f3f4f6;
+}
+
+.pageNumberActive {
+  background-color: #10b981;
+  color: white;
+}
+
+/* Detail Page */
+.detailContainer {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  padding: 2.5rem;
+}
+
+.detailTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 2rem;
+}
+
+.detailContent {
+  background-color: #f9fafb;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.detailRow {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  align-items: start;
+}
+
+.detailRow:last-child {
+  margin-bottom: 0;
+}
+
+.labelColumn {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #374151;
+  padding-top: 0.5rem;
+}
+
+.labelHint {
+  font-size: 0.75rem;
+  color: #6b7280;
+  font-weight: normal;
+  margin-top: 0.25rem;
+  line-height: 1.4;
+}
+
+.inputColumn {
+  flex: 1;
+}
+
+.detailInput {
+  width: 100%;
+  max-width: 800px;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.detailInput:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.detailTextarea {
+  width: 100%;
+  max-width: 800px;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  outline: none;
+  transition: all 0.2s;
+  font-family: inherit;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.detailTextarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.imageUploadArea {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.imageUploadButton {
+  padding: 0.5rem 1.25rem;
+  background-color: #3b82f6;
+  color: white;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: inline-block;
+}
+
+.imageUploadButton:hover {
+  background-color: #2563eb;
+}
+
+.fileInput {
+  display: none;
+}
+
+.imageFileName {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.detailButtons {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.cancelButton {
+  padding: 0.75rem 2.5rem;
+  background-color: #d1d5db;
+  color: #374151;
+  border-radius: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.cancelButton:hover {
+  background-color: #9ca3af;
+}
+
+.submitButton {
+  padding: 0.75rem 2.5rem;
+  background-color: #3b82f6;
+  color: white;
+  border-radius: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.submitButton:hover {
+  background-color: #2563eb;
+}
+
+/* Delete Popup */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popup {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  min-width: 24rem;
+  max-width: 28rem;
+}
+
+.popupTitle {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.popupMessage {
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.popupButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.popupCancelButton {
+  padding: 0.5rem 1rem;
+  background-color: #e5e7eb;
+  color: #374151;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.popupCancelButton:hover {
+  background-color: #d1d5db;
+}
+
+.popupConfirmButton {
+  padding: 0.5rem 1rem;
+  background-color: #ef4444;
+  color: white;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.popupConfirmButton:hover {
+  background-color: #dc2626;
+}

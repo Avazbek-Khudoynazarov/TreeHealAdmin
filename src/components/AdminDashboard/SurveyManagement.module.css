@@ -1,0 +1,267 @@
+.container {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.filterSection {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.filterButtons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filterButton {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background-color: #f3f4f6;
+  color: #374151;
+  border: none;
+  cursor: pointer;
+}
+
+.filterButtonActive {
+  background-color: #10b981;
+  color: white;
+}
+
+.searchSection {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.select {
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  outline: none;
+}
+
+.searchButton {
+  padding: 0.5rem 1rem;
+  background-color: #1f2937;
+  color: white;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+}
+
+.downloadButton {
+  padding: 0.5rem 1rem;
+  background-color: #10b981;
+  color: white;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: none;
+  cursor: pointer;
+}
+
+.downloadIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.chartsSection {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1rem;
+  margin: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.chartCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chartTitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.chartContainer {
+  position: relative;
+  width: 8rem;
+  height: 8rem;
+  margin-bottom: 0.75rem;
+}
+
+.chartCenter {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chartCenterText {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #1f2937;
+}
+
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.legendItem {
+  font-size: 0.625rem;
+  color: #4b5563;
+  text-align: left;
+}
+
+.dataCount {
+  font-size: 0.875rem;
+  color: #6b7280;
+  padding: 0 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.tableContainer {
+  overflow-x: auto;
+  padding: 0 1.5rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #e5e7eb;
+}
+
+.theadRow1 {
+  background-color: #f9fafb;
+  border-bottom: 2px solid #d1d5db;
+}
+
+.theadRow2 {
+  background-color: #f3f4f6;
+  border-bottom: 1px solid #d1d5db;
+}
+
+.th {
+  padding: 0.75rem 1rem;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #374151;
+  text-transform: uppercase;
+  border-right: 1px solid #d1d5db;
+}
+
+.thMain {
+  padding: 0.75rem 1.5rem;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #374151;
+  text-transform: uppercase;
+}
+
+.thSub {
+  padding: 0.75rem 0.75rem;
+  text-align: center;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #374151;
+  border-right: 1px solid #d1d5db;
+  min-width: 140px;
+}
+
+.tbody {
+  background-color: white;
+}
+
+.tr {
+  transition: background-color 0.2s;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.tr:hover {
+  background-color: #f9fafb;
+}
+
+.td {
+  padding: 1rem 1rem;
+  font-size: 0.875rem;
+  color: #111827;
+  text-align: center;
+  border-right: 1px solid #e5e7eb;
+}
+
+.tdSmall {
+  padding: 1rem 0.75rem;
+  font-size: 0.75rem;
+  color: #111827;
+  text-align: center;
+  border-right: 1px solid #e5e7eb;
+}
+
+.pagination {
+  padding: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.paginationButton {
+  padding: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+}
+
+.paginationButton:hover {
+  background-color: #f3f4f6;
+}
+
+.paginationIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #4b5563;
+}
+
+.pageNumber {
+  padding: 0.25rem 0.75rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+}
+
+.pageNumber:hover {
+  background-color: #f3f4f6;
+}
+
+.pageNumberActive {
+  background-color: #10b981;
+  color: white;
+}

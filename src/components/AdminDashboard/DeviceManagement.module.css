@@ -1,0 +1,320 @@
+.container {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.filterSection {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 1rem;
+}
+
+.searchSection {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.searchBox {
+  position: relative;
+}
+
+.searchIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+}
+
+.searchInput {
+  padding-left: 2.5rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  outline: none;
+}
+
+.searchButton {
+  padding: 0.5rem 1rem;
+  background-color: #1f2937;
+  color: white;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+}
+
+.dataCount {
+  font-size: 0.875rem;
+  color: #6b7280;
+  padding: 0 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.tableContainer {
+  overflow-x: auto;
+  padding: 0 1.5rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.thead {
+  background-color: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.th {
+  padding: 0.75rem 1.5rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #374151;
+  text-transform: uppercase;
+}
+
+.thCenter {
+  padding: 0.75rem 1.5rem;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #374151;
+  text-transform: uppercase;
+}
+
+.tbody {
+  background-color: white;
+}
+
+.tr {
+  transition: background-color 0.2s;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.tr:hover {
+  background-color: #f9fafb;
+}
+
+.td {
+  padding: 1rem 1.5rem;
+  font-size: 0.875rem;
+  color: #111827;
+}
+
+.tdCenter {
+  padding: 1rem 1.5rem;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.editLink {
+  color: #2563eb;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 0.75rem;
+}
+
+.editLink:hover {
+  color: #1e40af;
+}
+
+.deleteLink {
+  color: #dc2626;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.deleteLink:hover {
+  color: #b91c1c;
+}
+
+.pagination {
+  padding: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.paginationButton {
+  padding: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+}
+
+.paginationButton:hover {
+  background-color: #f3f4f6;
+}
+
+.paginationIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #4b5563;
+}
+
+.pageNumber {
+  padding: 0.25rem 0.75rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+}
+
+.pageNumber:hover {
+  background-color: #f3f4f6;
+}
+
+.pageNumberActive {
+  background-color: #10b981;
+  color: white;
+}
+
+/* Edit Screen Styles */
+.editContainer {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  padding: 2rem;
+}
+
+.editTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 1.5rem;
+}
+
+.editTable {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+}
+
+.editTable tr {
+  border-bottom: 1px solid #d1d5db;
+}
+
+.labelCell {
+  background-color: #f3f4f6;
+  padding: 1rem 1.5rem;
+  font-weight: 600;
+  color: #374151;
+  width: 12rem;
+}
+
+.valueCell {
+  padding: 1rem 1.5rem;
+  color: #111827;
+}
+
+.helpText {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+  font-weight: normal;
+}
+
+.warningText {
+  font-size: 0.75rem;
+  color: #dc2626;
+  margin-top: 0.25rem;
+  font-weight: normal;
+}
+
+.input {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  outline: none;
+}
+
+.input:focus {
+  ring: 2px;
+  ring-color: #10b981;
+}
+
+.selectButton {
+  padding: 0.5rem 1rem;
+  background-color: #d1fae5;
+  color: #059669;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid #a7f3d0;
+  cursor: pointer;
+  margin-bottom: 0.75rem;
+}
+
+.selectButton:hover {
+  background-color: #a7f3d0;
+}
+
+.expertTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.expertTag {
+  padding: 0.25rem 0.75rem;
+  background-color: #f3f4f6;
+  color: #374151;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+}
+
+.buttonGroup {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.cancelButton {
+  padding: 0.75rem 2rem;
+  background-color: #e5e7eb;
+  color: #374151;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.cancelButton:hover {
+  background-color: #d1d5db;
+}
+
+.saveButton {
+  padding: 0.75rem 2rem;
+  background-color: #3b82f6;
+  color: white;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.saveButton:hover {
+  background-color: #2563eb;
+}

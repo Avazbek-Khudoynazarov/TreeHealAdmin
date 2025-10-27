@@ -1,0 +1,44 @@
+.hero {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #d8f3dc 0%, #95d5b2 100%);
+  padding: 4rem 2rem;
+}
+
+.container {
+  max-width: 800px;
+  text-align: center;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #1b4332;
+  margin-bottom: 1rem;
+}
+
+.description {
+  font-size: 1.25rem;
+  color: #2d6a4f;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .description {
+    font-size: 1rem;
+  }
+}
