@@ -2,11 +2,21 @@ import React, { useState } from 'react';
 import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import styles from './DeviceManagement.module.css';
 
+interface Device {
+  no: number;
+  name: string;
+  ssaid: string;
+  type: string;
+  note: string;
+  registered: string;
+  experts: string[];
+}
+
 export default function DeviceManagement() {
-  const [selectedDevice, setSelectedDevice] = useState(null);
+  const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const devices = [
+  const devices: Device[] = [
     { no: 100, name: 'test01', ssaid: '803b849bfa3417', type: '전안 터미널', note: 'NULL', registered: '2025-07-11 15:00', experts: ['홍길동(고정)', '김진수', '송이나'] },
     { no: 99, name: 'test01', ssaid: '703b849bfa3417', type: '대구 동성로', note: '홍길동 등 40명', registered: '2025-07-11 13:00', experts: [] },
     { no: 98, name: 'test01', ssaid: '603b849bfa3417', type: '대전노은점', note: '김진수 등 26명', registered: '2025-07-06 11:00', experts: [] }
