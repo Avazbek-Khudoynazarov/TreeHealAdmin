@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import styles from './ConsultantManagement.module.css';
 
 interface Consultant {
+  id?: number;
   name: string;
   phone: string;
   career: string;
-  qualifications: string;
+  qualification: string;
   image: string | null;
 }
 
@@ -16,20 +17,41 @@ export default function ConsultantManagement() {
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Consultant | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [consultants, setConsultants] = useState<Consultant[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchInput, setSearchInput] = useState('');
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
 
-  const [consultants, setConsultants] = useState<Consultant[]>([
-    { name: '김철수', phone: '010-1234-1234', career: '메리츠화재 TC 실장', qualifications: '- 손해보험 자격\n- 생명보험 자격\n- 변액보험 자격\n- 연금보험 자격', image: null },
-    { name: '이영희', phone: '010-1234-1234', career: '삼성생명 지점장', qualifications: '- 손해보험 자격\n- 생명보험 자격\n- 변액보험 자격\n- 연금보험 자격', image: null },
-    { name: '송이안', phone: '010-1234-1234', career: '한화생명 팀장', qualifications: '- 손해보험 자격\n- 생명보험 자격\n- 변액보험 자격\n- 연금보험 자격', image: null },
-    { name: '박민준', phone: '010-1234-5678', career: 'KB손해보험 부장', qualifications: '- 손해보험 자격\n- 생명보험 자격\n- 변액보험 자격\n- 연금보험 자격', image: null },
-    { name: '최서연', phone: '010-2345-6789', career: '현대해상 팀장', qualifications: '- 손해보험 자격\n- 생명보험 자격\n- 변액보험 자격\n- 연금보험 자격', image: null },
-    { name: '정우진', phone: '010-3456-7890', career: 'DB손해보험 차장', qualifications: '- 손해보험 자격\n- 생명보험 자격\n- 변액보험 자격\n- 연금보험 자격', image: null },
-    { name: '강지훈', phone: '010-4567-8901', career: '삼성화재 과장', qualifications: '- 손해보험 자격\n- 생명보험 자격\n- 변액보험 자격\n- 연금보험 자격', image: null },
-    { name: '한소희', phone: '010-5678-9012', career: '교보생명 지점장', qualifications: '- 손해보험 자격\n- 생명보험 자격\n- 변액보험 자격\n- 연금보험 자격', image: null },
-    { name: '윤상민', phone: '010-6789-0123', career: '흥국화재 실장', qualifications: '- 손해보험 자격\n- 생명보험 자격\n- 변액보험 자격\n- 연금보험 자격', image: null },
-    { name: '오지영', phone: '010-7890-1234', career: 'AIA생명 부지점장', qualifications: '- 손해보험 자격\n- 생명보험 자격\n- 변액보험 자격\n- 연금보험 자격', image: null },
-    { name: '임재현', phone: '010-8901-2345', career: '롯데손해보험 팀장', qualifications: '- 손해보험 자격\n- 생명보험 자격\n- 변액보험 자격\n- 연금보험 자격', image: null },
-  ]);
+  // Fetch consultants from API
+  useEffect(() => {
+    fetchConsultants();
+  }, [currentPage, searchQuery]);
+
+  const fetchConsultants = async () => {
+    try {
+      setLoading(true);
+      const params = new URLSearchParams({
+        page: currentPage.toString(),
+        limit: '10',
+        q: searchQuery
+      });
+      const response = await fetch(`/api/consultants?${params}`);
+      if (!response.ok) throw new Error('Failed to fetch consultants');
+      const result = await response.json();
+      setConsultants(result.data);
+      setTotal(result.total);
+      setTotalPages(result.totalPages);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+      console.error('Error fetching consultants:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleNewConsultant = () => {
     setIsNewConsultant(true);
@@ -37,16 +59,36 @@ export default function ConsultantManagement() {
       name: '',
       phone: '',
       career: '',
-      qualifications: '',
+      qualification: '',
       image: null
     });
   };
 
-  const handleSaveConsultant = () => {
-    console.log('저장:', selectedConsultant);
-    alert('저장되었습니다.');
-    setSelectedConsultant(null);
-    setIsNewConsultant(false);
+  const handleSaveConsultant = async () => {
+    if (!selectedConsultant) return;
+
+    try {
+      const method = isNewConsultant ? 'POST' : 'PUT';
+      const url = isNewConsultant
+        ? '/api/consultants'
+        : `/api/consultants/${selectedConsultant.id}`;
+
+      const response = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(selectedConsultant),
+      });
+
+      if (!response.ok) throw new Error('Failed to save consultant');
+
+      alert('저장되었습니다.');
+      await fetchConsultants();
+      setSelectedConsultant(null);
+      setIsNewConsultant(false);
+    } catch (err) {
+      alert('저장 중 오류가 발생했습니다.');
+      console.error('Error saving consultant:', err);
+    }
   };
 
   const handleCancelConsultant = () => {
@@ -59,10 +101,24 @@ export default function ConsultantManagement() {
     setShowDeletePopup(true);
   };
 
-  const confirmDelete = () => {
-    console.log('삭제:', deleteTarget);
-    setShowDeletePopup(false);
-    setDeleteTarget(null);
+  const confirmDelete = async () => {
+    if (!deleteTarget || !deleteTarget.id) return;
+
+    try {
+      const response = await fetch(`/api/consultants/${deleteTarget.id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) throw new Error('Failed to delete consultant');
+
+      alert('삭제되었습니다.');
+      await fetchConsultants();
+      setShowDeletePopup(false);
+      setDeleteTarget(null);
+    } catch (err) {
+      alert('삭제 중 오류가 발생했습니다.');
+      console.error('Error deleting consultant:', err);
+    }
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,6 +133,42 @@ export default function ConsultantManagement() {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleSearch = () => {
+    setSearchQuery(searchInput);
+    setCurrentPage(1); // Reset to first page on new search
+  };
+
+  const handleSearchKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
+  const renderPageNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(
+        <button
+          key={i}
+          className={`${styles.pageNumber} ${currentPage === i ? styles.pageNumberActive : ''}`}
+          onClick={() => setCurrentPage(i)}
+        >
+          {i}
+        </button>
+      );
+    }
+
+    return pages;
   };
 
   // 전문가 상세/수정 화면
@@ -138,8 +230,8 @@ export default function ConsultantManagement() {
             </div>
             <div className={styles.inputColumn}>
               <textarea
-                value={selectedConsultant.qualifications}
-                onChange={(e) => setSelectedConsultant({ ...selectedConsultant, qualifications: e.target.value })}
+                value={selectedConsultant.qualification}
+                onChange={(e) => setSelectedConsultant({ ...selectedConsultant, qualification: e.target.value })}
                 className={styles.detailTextarea}
                 rows={5}
                 placeholder="- 손해보험 자격&#10;- 생명보험 자격&#10;- 변액보험 자격&#10;- 연금보험 자격"
@@ -190,20 +282,32 @@ export default function ConsultantManagement() {
         <div className={styles.searchSection}>
           <div className={styles.searchBox}>
             <Search className={styles.searchIcon} />
-            <input type="text" placeholder="검색어" className={styles.searchInput} />
+            <input
+              type="text"
+              placeholder="검색어"
+              className={styles.searchInput}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              onKeyDown={handleSearchKeyPress}
+            />
           </div>
-          <button className={styles.searchButton}>검색</button>
+          <button onClick={handleSearch} className={styles.searchButton}>검색</button>
         </div>
         <button onClick={handleNewConsultant} className={styles.newButton}>
           전문가 등록
         </button>
       </div>
 
-      <p className={styles.dataCount}>data. 999건</p>
+      <p className={styles.dataCount}>data. {total}건</p>
 
-      <div className={styles.gridContainer}>
-        {consultants.map((consultant, idx) => (
-          <div key={idx} className={styles.card}>
+      {loading && <p style={{ textAlign: 'center', padding: '2rem' }}>로딩 중...</p>}
+      {error && <p style={{ textAlign: 'center', padding: '2rem', color: 'red' }}>에러: {error}</p>}
+
+      {!loading && !error && (
+        <>
+          <div className={styles.gridContainer}>
+            {consultants.map((consultant) => (
+              <div key={consultant.id} className={styles.card}>
             <div className={styles.cardImage}>
               {consultant.image ? (
                 <img src={consultant.image} alt={consultant.name} className={styles.consultantImage} />
@@ -236,42 +340,27 @@ export default function ConsultantManagement() {
             </div>
           </div>
         ))}
-      </div>
+          </div>
 
-      <div className={styles.pagination}>
-        <button
-          className={styles.paginationButton}
-          onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-          disabled={currentPage === 1}
-        >
-          <ChevronLeft className={styles.paginationIcon} />
-        </button>
-        <button
-          className={`${styles.pageNumber} ${currentPage === 1 ? styles.pageNumberActive : ''}`}
-          onClick={() => setCurrentPage(1)}
-        >
-          1
-        </button>
-        <button
-          className={`${styles.pageNumber} ${currentPage === 2 ? styles.pageNumberActive : ''}`}
-          onClick={() => setCurrentPage(2)}
-        >
-          2
-        </button>
-        <button
-          className={`${styles.pageNumber} ${currentPage === 3 ? styles.pageNumberActive : ''}`}
-          onClick={() => setCurrentPage(3)}
-        >
-          3
-        </button>
-        <button
-          className={styles.paginationButton}
-          onClick={() => setCurrentPage(prev => Math.min(3, prev + 1))}
-          disabled={currentPage === 3}
-        >
-          <ChevronRight className={styles.paginationIcon} />
-        </button>
-      </div>
+          <div className={styles.pagination}>
+            <button
+              className={styles.paginationButton}
+              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              disabled={currentPage === 1}
+            >
+              <ChevronLeft className={styles.paginationIcon} />
+            </button>
+            {renderPageNumbers()}
+            <button
+              className={styles.paginationButton}
+              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+              disabled={currentPage === totalPages}
+            >
+              <ChevronRight className={styles.paginationIcon} />
+            </button>
+          </div>
+        </>
+      )}
 
       {/* 삭제 확인 팝업 */}
       {showDeletePopup && (

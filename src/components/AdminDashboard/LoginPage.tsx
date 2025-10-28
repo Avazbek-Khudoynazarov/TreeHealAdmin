@@ -5,9 +5,16 @@ interface LoginPageProps {
   loginForm: { id: string; password: string };
   setLoginForm: (form: { id: string; password: string }) => void;
   handleLogin: () => void;
+  loginError: string;
+  isLoggingIn: boolean;
 }
 
-export default function LoginPage({ loginForm, setLoginForm, handleLogin }: LoginPageProps) {
+export default function LoginPage({ loginForm, setLoginForm, handleLogin, loginError, isLoggingIn }: LoginPageProps) {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleLogin();
+    }
+  };
   return (
     <div className={styles.container}>
       <div className={styles.loginBox}>
@@ -27,6 +34,8 @@ export default function LoginPage({ loginForm, setLoginForm, handleLogin }: Logi
               onChange={(e) => setLoginForm({ ...loginForm, id: e.target.value })}
               placeholder="아이디를 입력해주세요"
               className={styles.input}
+              onKeyDown={handleKeyPress}
+              disabled={isLoggingIn}
             />
           </div>
           <div className={styles.inputGroup}>
@@ -37,13 +46,21 @@ export default function LoginPage({ loginForm, setLoginForm, handleLogin }: Logi
               onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
               placeholder="비밀번호를 입력해주세요"
               className={styles.input}
+              onKeyDown={handleKeyPress}
+              disabled={isLoggingIn}
             />
           </div>
-          <p className={styles.errorText}>
-            아이디 혹은 비밀번호가 잘못되어 있습니다.
-          </p>
-          <button onClick={handleLogin} className={styles.loginButton}>
-            로그인
+          {loginError && (
+            <p className={styles.errorText}>
+              {loginError}
+            </p>
+          )}
+          <button
+            onClick={handleLogin}
+            className={styles.loginButton}
+            disabled={isLoggingIn}
+          >
+            {isLoggingIn ? '로그인 중...' : '로그인'}
           </button>
         </div>
       </div>
