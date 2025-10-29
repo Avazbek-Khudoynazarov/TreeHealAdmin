@@ -27,8 +27,8 @@ export async function GET(request: NextRequest) {
 
     // Get paginated data
     const consultants = await query(
-      `SELECT * FROM consultants ${whereClause} ORDER BY id DESC LIMIT ? OFFSET ?`,
-      [...queryParams, limit, offset]
+      `SELECT * FROM consultants ${whereClause} ORDER BY id DESC LIMIT ${limit} OFFSET ${offset}`,
+      queryParams
     );
 
     return NextResponse.json({

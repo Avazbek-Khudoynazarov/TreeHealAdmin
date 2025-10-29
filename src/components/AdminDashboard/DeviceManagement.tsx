@@ -82,11 +82,24 @@ export default function DeviceManagement() {
         `/api/devices?page=${currentPage}&limit=10&q=${searchQuery}`
       );
       const data = await response.json();
+
+      // Check if response is successful and has data
+      if (!response.ok || !data.data) {
+        console.error("API error:", data.error || "Failed to fetch devices");
+        setDevices([]);
+        setTotalPages(1);
+        setTotalCount(0);
+        return;
+      }
+
       setDevices(data.data);
       setTotalPages(data.totalPages);
       setTotalCount(data.total);
     } catch (error) {
       console.error("Failed to fetch devices:", error);
+      setDevices([]);
+      setTotalPages(1);
+      setTotalCount(0);
     } finally {
       setLoading(false);
     }
