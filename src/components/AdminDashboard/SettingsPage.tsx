@@ -1,29 +1,107 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './SettingsPage.module.css';
+
+interface Category {
+  id: number;
+  title: string;
+  icon: string;
+  description: string;
+  display_order: number;
+}
+
+interface DetailItem {
+  id: number;
+  title: string;
+  icon: string;
+  display_order: number;
+}
 
 export default function SettingsPage() {
   const [settingsTab, setSettingsTab] = useState('basic');
+  const [loading, setLoading] = useState(true);
 
-  // 기본 설정 states
-  const [mainTitle, setMainTitle] = useState('보험금 청구 상담');
-  const [mainImage, setMainImage] = useState('icon_01.png (95kb)');
-  const [mainDescription, setMainDescription] = useState('전문성담자가 고 객님의의 상담을 도와드립니다.\n빠르고 정확한 업무를 위해 항사한 기다려주세요.');
+  // 기본 설정 states - Categories
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [mainTitle, setMainTitle] = useState('');
+  const [mainImage, setMainImage] = useState('');
+  const [mainDescription, setMainDescription] = useState('');
 
-  const [subTitle, setSubTitle] = useState('무료 보험 상담');
-  const [subImage, setSubImage] = useState('icon_02.png (100kb)');
-  const [subDescription, setSubDescription] = useState('전문성담자가 3회차 예약도의 상담을 도와드립니다.\n빠르고 정확한 업무를 위해 항사한 기다려주세요.');
+  const [subTitle, setSubTitle] = useState('');
+  const [subImage, setSubImage] = useState('');
+  const [subDescription, setSubDescription] = useState('');
 
-  const [item1Title, setItem1Title] = useState('실손보험');
-  const [item1Image, setItem1Image] = useState('icon_2Depth_01.png (95kb)');
+  // 기본 설정 states - Detail Items
+  const [detailItems, setDetailItems] = useState<DetailItem[]>([]);
+  const [item1Title, setItem1Title] = useState('');
+  const [item1Image, setItem1Image] = useState('');
 
-  const [item2Title, setItem2Title] = useState('수술비');
-  const [item2Image, setItem2Image] = useState('icon_2Depth_02.png (95kb)');
+  const [item2Title, setItem2Title] = useState('');
+  const [item2Image, setItem2Image] = useState('');
 
-  const [item3Title, setItem3Title] = useState('진단비');
-  const [item3Image, setItem3Image] = useState('icon_2Depth_03.png (95kb)');
+  const [item3Title, setItem3Title] = useState('');
+  const [item3Image, setItem3Image] = useState('');
 
-  const [item4Title, setItem4Title] = useState('기타 상담');
-  const [item4Image, setItem4Image] = useState('icon_2Depth_04.png (95kb)');
+  const [item4Title, setItem4Title] = useState('');
+  const [item4Image, setItem4Image] = useState('');
+
+  // Fetch data from API
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  const fetchSettings = async () => {
+    try {
+      setLoading(true);
+
+      // Fetch categories
+      const categoriesRes = await fetch('/api/settings/categories');
+      const categoriesData = await categoriesRes.json();
+      setCategories(categoriesData);
+
+      if (categoriesData.length >= 2) {
+        setMainTitle(categoriesData[0].title);
+        setMainImage(categoriesData[0].icon || '');
+        setMainDescription(categoriesData[0].description);
+
+        setSubTitle(categoriesData[1].title);
+        setSubImage(categoriesData[1].icon || '');
+        setSubDescription(categoriesData[1].description);
+      }
+
+      // Fetch detail items
+      const itemsRes = await fetch('/api/settings/items');
+      const itemsData = await itemsRes.json();
+      setDetailItems(itemsData);
+
+      if (itemsData.length >= 4) {
+        setItem1Title(itemsData[0].title);
+        setItem1Image(itemsData[0].icon || '');
+
+        setItem2Title(itemsData[1].title);
+        setItem2Image(itemsData[1].icon || '');
+
+        setItem3Title(itemsData[2].title);
+        setItem3Image(itemsData[2].icon || '');
+
+        setItem4Title(itemsData[3].title);
+        setItem4Image(itemsData[3].icon || '');
+      }
+
+      // Fetch terms settings
+      const termsRes = await fetch('/api/settings/terms');
+      const termsData = await termsRes.json();
+      setTerms1(termsData.privacy_consent || '');
+      setTerms2(termsData.service_terms || '');
+      setTerms3(termsData.consultation_consent || '');
+      setTerms4(termsData.marketing_consent || '');
+
+    } catch (error) {
+      console.error('Error fetching settings:', error);
+      alert('설정을 불러오는 중 오류가 발생했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // 약관 설정 states
   const [terms1, setTerms1] = useState('');
@@ -37,21 +115,100 @@ export default function SettingsPage() {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, setter: (value: string) => void) => {
     const file = e.target.files?.[0];
     if (file) {
-      setter(`${file.name} (${Math.round(file.size / 1024)}kb)`);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setter(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  const handleSaveBasic = () => {
-    alert('저장되었습니다.');
+  const handleSaveBasic = async () => {
+    try {
+      // Prepare categories data
+      const categoriesToUpdate = [
+        {
+          id: categories[0]?.id,
+          title: mainTitle,
+          icon: mainImage,
+          description: mainDescription
+        },
+        {
+          id: categories[1]?.id,
+          title: subTitle,
+          icon: subImage,
+          description: subDescription
+        }
+      ];
+
+      // Prepare detail items data
+      const itemsToUpdate = [
+        { id: detailItems[0]?.id, title: item1Title, icon: item1Image },
+        { id: detailItems[1]?.id, title: item2Title, icon: item2Image },
+        { id: detailItems[2]?.id, title: item3Title, icon: item3Image },
+        { id: detailItems[3]?.id, title: item4Title, icon: item4Image }
+      ];
+
+      // Save categories
+      const categoriesRes = await fetch('/api/settings/categories', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ categories: categoriesToUpdate })
+      });
+
+      if (!categoriesRes.ok) throw new Error('Failed to save categories');
+
+      // Save detail items
+      const itemsRes = await fetch('/api/settings/items', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: itemsToUpdate })
+      });
+
+      if (!itemsRes.ok) throw new Error('Failed to save items');
+
+      alert('저장되었습니다.');
+      await fetchSettings(); // Refresh data
+    } catch (error) {
+      console.error('Error saving settings:', error);
+      alert('저장 중 오류가 발생했습니다.');
+    }
   };
 
-  const handleSaveTerms = () => {
-    alert('저장되었습니다.');
+  const handleSaveTerms = async () => {
+    try {
+      const response = await fetch('/api/settings/terms', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          privacy_consent: terms1,
+          service_terms: terms2,
+          consultation_consent: terms3,
+          marketing_consent: terms4
+        })
+      });
+
+      if (!response.ok) throw new Error('Failed to save terms');
+
+      alert('저장되었습니다.');
+      await fetchSettings(); // Refresh data
+    } catch (error) {
+      console.error('Error saving terms:', error);
+      alert('저장 중 오류가 발생했습니다.');
+    }
   };
 
   const handleSaveSurveyLink = () => {
     alert('저장되었습니다.');
   };
+
+  if (loading) {
+    return (
+      <div className={styles.container}>
+        <p style={{ textAlign: 'center', padding: '2rem' }}>로딩 중...</p>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>
@@ -347,46 +504,74 @@ export default function SettingsPage() {
             <h3 className={styles.sectionTitle}>약관 설정</h3>
 
             <div className={styles.termsGroup}>
-              <label className={styles.termsLabel}>개인정보 수집·이용 동의</label>
+              <label className={styles.termsLabel}>
+                개인정보 수집·이용 동의
+                <span className={styles.charCount}>{terms1.length}/1000자</span>
+              </label>
               <textarea
                 value={terms1}
-                onChange={(e) => setTerms1(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value.slice(0, 1000);
+                  setTerms1(value);
+                }}
+                maxLength={1000}
                 className={styles.termsTextarea}
                 rows={5}
-                placeholder="약관 내용을 입력하세요"
+                placeholder="약관 내용을 입력하세요 (최대 1000자)"
               />
             </div>
 
             <div className={styles.termsGroup}>
-              <label className={styles.termsLabel}>서비스 이용 약관</label>
+              <label className={styles.termsLabel}>
+                서비스 이용 약관
+                <span className={styles.charCount}>{terms2.length}/1000자</span>
+              </label>
               <textarea
                 value={terms2}
-                onChange={(e) => setTerms2(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value.slice(0, 1000);
+                  setTerms2(value);
+                }}
+                maxLength={1000}
                 className={styles.termsTextarea}
                 rows={5}
-                placeholder="약관 내용을 입력하세요"
+                placeholder="약관 내용을 입력하세요 (최대 1000자)"
               />
             </div>
 
             <div className={styles.termsGroup}>
-              <label className={styles.termsLabel}>상담 안내 메시지 수신 동의</label>
+              <label className={styles.termsLabel}>
+                상담 안내 메시지 수신 동의
+                <span className={styles.charCount}>{terms3.length}/1000자</span>
+              </label>
               <textarea
                 value={terms3}
-                onChange={(e) => setTerms3(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value.slice(0, 1000);
+                  setTerms3(value);
+                }}
+                maxLength={1000}
                 className={styles.termsTextarea}
                 rows={5}
-                placeholder="약관 내용을 입력하세요"
+                placeholder="약관 내용을 입력하세요 (최대 1000자)"
               />
             </div>
 
             <div className={styles.termsGroup}>
-              <label className={styles.termsLabel}>마케팅이벤트 안내 수신 동의</label>
+              <label className={styles.termsLabel}>
+                마케팅이벤트 안내 수신 동의
+                <span className={styles.charCount}>{terms4.length}/1000자</span>
+              </label>
               <textarea
                 value={terms4}
-                onChange={(e) => setTerms4(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value.slice(0, 1000);
+                  setTerms4(value);
+                }}
+                maxLength={1000}
                 className={styles.termsTextarea}
                 rows={5}
-                placeholder="약관 내용을 입력하세요"
+                placeholder="약관 내용을 입력하세요 (최대 1000자)"
               />
             </div>
           </div>

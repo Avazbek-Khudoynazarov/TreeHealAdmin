@@ -4,7 +4,12 @@ import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import styles from './SurveyManagement.module.css';
 
 export default function SurveyManagement() {
+  const [dateRangeFilter, setDateRangeFilter] = useState('1month');
+  const [showCustomDatePicker, setShowCustomDatePicker] = useState(false);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+
   const surveys = [
     { no: 100, date: '2025-07-11 15:00', name: '김진수', consultant: '이서연', q1: '① 보험금청구', q2: '② 보험금 청구 등', q3: '③ 담당 전문가가', q4: '④ 담당 전문가의', q5: '⑤ 보험금청구 및', q5_1: '-' },
     { no: 99, date: '2025-07-11 13:00', name: '이성진', consultant: '이서연', q1: '① 보험 상담', q2: '② 보험 상담', q3: '③에도 그러더니', q4: '④그렇다', q5: '④그렇다(다)', q5_1: '④전문성 부족' },
@@ -41,12 +46,50 @@ export default function SurveyManagement() {
     <div className={styles.container}>
       <div className={styles.filterSection}>
         <div className={styles.filterButtons}>
-          <button className={`${styles.filterButton} ${styles.filterButtonActive}`}>
+          <button
+            onClick={() => {
+              setDateRangeFilter('1month');
+              setShowCustomDatePicker(false);
+            }}
+            className={`${styles.filterButton} ${
+              dateRangeFilter === '1month' ? styles.filterButtonActive : ''
+            }`}
+          >
             최근 1개월
           </button>
-          <button className={styles.filterButton}>최근 6개월</button>
-          <button className={styles.filterButton}>최근 1년</button>
-          <button className={styles.filterButton}>기간 선택</button>
+          <button
+            onClick={() => {
+              setDateRangeFilter('6months');
+              setShowCustomDatePicker(false);
+            }}
+            className={`${styles.filterButton} ${
+              dateRangeFilter === '6months' ? styles.filterButtonActive : ''
+            }`}
+          >
+            최근 6개월
+          </button>
+          <button
+            onClick={() => {
+              setDateRangeFilter('1year');
+              setShowCustomDatePicker(false);
+            }}
+            className={`${styles.filterButton} ${
+              dateRangeFilter === '1year' ? styles.filterButtonActive : ''
+            }`}
+          >
+            최근 1년
+          </button>
+          <button
+            onClick={() => {
+              setDateRangeFilter('custom');
+              setShowCustomDatePicker(true);
+            }}
+            className={`${styles.filterButton} ${
+              dateRangeFilter === 'custom' ? styles.filterButtonActive : ''
+            }`}
+          >
+            기간 선택
+          </button>
         </div>
         <div className={styles.searchSection}>
           <select className={styles.select}>
@@ -59,6 +102,31 @@ export default function SurveyManagement() {
           </button>
         </div>
       </div>
+
+      {showCustomDatePicker && (
+        <div className={styles.datePickerSection}>
+          <div className={styles.datePickerGroup}>
+            <label className={styles.dateLabel}>시작일:</label>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className={styles.dateInput}
+            />
+          </div>
+          <span className={styles.dateSeparator}>~</span>
+          <div className={styles.datePickerGroup}>
+            <label className={styles.dateLabel}>종료일:</label>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className={styles.dateInput}
+            />
+          </div>
+          <button className={styles.applyDateButton}>적용</button>
+        </div>
+      )}
 
       <div className={styles.chartsSection}>
         {[0, 1, 2, 2, 2, 2].map((chartIndex, idx) => (

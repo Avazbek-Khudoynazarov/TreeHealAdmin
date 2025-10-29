@@ -152,6 +152,11 @@
 .fileName {
   font-size: 0.875rem;
   color: #6b7280;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
 }
 
 /* Terms Tab Styles */
@@ -160,11 +165,19 @@
 }
 
 .termsLabel {
-  display: block;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-size: 0.9375rem;
   font-weight: 600;
   color: #374151;
   margin-bottom: 0.75rem;
+}
+
+.charCount {
+  font-size: 0.75rem;
+  font-weight: normal;
+  color: #6b7280;
 }
 
 .termsTextarea {
