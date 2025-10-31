@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
 
     // Get paginated data
     const dataQuery = `
-      SELECT device_id as id, account, ssaid, device_name, experts, created_at
+      SELECT device_id as id, account, ssaid, device_name, experts, registered_at as created_at
       FROM devices
       ${whereClause}
       ORDER BY device_id DESC
