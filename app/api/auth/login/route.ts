@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
 
     // Hardcoded credentials for now
     const ADMIN_EMAIL = 'admin@gmail.com';
-    const ADMIN_PASSWORD = '321321';
+    const ADMIN_PASSWORD = '123123';
 
     if (id === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
       // Login successful
