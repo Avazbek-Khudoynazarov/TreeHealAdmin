@@ -23,7 +23,7 @@ export async function PUT(
     const updateQuery = `
       UPDATE devices
       SET account = ?, ssaid = ?, device_name = ?, experts = ?
-      WHERE id = ?
+      WHERE device_id = ?
     `;
     const expertsJson = JSON.stringify(experts || []);
 
@@ -48,7 +48,7 @@ export async function DELETE(
     const deviceId = params.id;
 
     // Delete device
-    const deleteQuery = 'DELETE FROM devices WHERE id = ?';
+    const deleteQuery = 'DELETE FROM devices WHERE device_id = ?';
     await query(deleteQuery, [deviceId]);
 
     return NextResponse.json({ message: 'Device deleted successfully' });

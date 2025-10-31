@@ -7,7 +7,10 @@ export async function GET(
 ) {
   try {
     const consultants = await query(
-      'SELECT * FROM consultants WHERE id = ?',
+      `SELECT expert_id as id, expert_name as name, contact_number as phone,
+              specialization as career, qualifications as qualification,
+              profile_image as image, created_at, updated_at
+       FROM experts WHERE expert_id = ?`,
       [params.id]
     );
 
@@ -37,7 +40,7 @@ export async function PUT(
     const { name, phone, career, qualification, image } = body;
 
     await query(
-      'UPDATE consultants SET name = ?, phone = ?, career = ?, qualification = ?, image = ? WHERE id = ?',
+      'UPDATE experts SET expert_name = ?, contact_number = ?, specialization = ?, qualifications = ?, profile_image = ? WHERE expert_id = ?',
       [name, phone, career, qualification, image, params.id]
     );
 
@@ -56,7 +59,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    await query('DELETE FROM consultants WHERE id = ?', [params.id]);
+    await query('DELETE FROM experts WHERE expert_id = ?', [params.id]);
     return NextResponse.json({ message: 'Consultant deleted successfully' });
   } catch (error) {
     console.error('Database error:', error);

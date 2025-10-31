@@ -5,7 +5,9 @@ import { query } from '@/lib/db';
 export async function GET() {
   try {
     const categories = await query(
-      'SELECT * FROM categories ORDER BY display_order ASC'
+      `SELECT category_id as id, category_name as title, category_icon as icon,
+              display_order, created_at, updated_at
+       FROM consultation_categories ORDER BY display_order ASC`
     );
     return NextResponse.json(categories);
   } catch (error) {
@@ -33,8 +35,8 @@ export async function PUT(request: NextRequest) {
     // Update each category
     for (const category of categories) {
       await query(
-        'UPDATE categories SET title = ?, icon = ?, description = ? WHERE id = ?',
-        [category.title, category.icon, category.description, category.id]
+        'UPDATE consultation_categories SET category_name = ?, category_icon = ? WHERE category_id = ?',
+        [category.title, category.icon, category.id]
       );
     }
 

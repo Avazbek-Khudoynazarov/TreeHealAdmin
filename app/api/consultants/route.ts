@@ -13,21 +13,24 @@ export async function GET(request: NextRequest) {
     let queryParams: any[] = [];
 
     if (searchQuery) {
-      whereClause = 'WHERE name LIKE ? OR phone LIKE ? OR career LIKE ?';
+      whereClause = 'WHERE expert_name LIKE ? OR contact_number LIKE ? OR specialization LIKE ?';
       const searchPattern = `%${searchQuery}%`;
       queryParams = [searchPattern, searchPattern, searchPattern];
     }
 
     // Get total count
     const countResult = await query(
-      `SELECT COUNT(*) as total FROM consultants ${whereClause}`,
+      `SELECT COUNT(*) as total FROM experts ${whereClause}`,
       queryParams
     ) as any[];
     const total = countResult[0].total;
 
-    // Get paginated data
+    // Get paginated data - map expert columns to consultant format
     const consultants = await query(
-      `SELECT * FROM consultants ${whereClause} ORDER BY id DESC LIMIT ${limit} OFFSET ${offset}`,
+      `SELECT expert_id as id, expert_name as name, contact_number as phone,
+              specialization as career, qualifications as qualification,
+              profile_image as image, created_at, updated_at
+       FROM experts ${whereClause} ORDER BY expert_id DESC LIMIT ${limit} OFFSET ${offset}`,
       queryParams
     );
 
@@ -53,7 +56,7 @@ export async function POST(request: NextRequest) {
     const { name, phone, career, qualification, image } = body;
 
     const result = await query(
-      'INSERT INTO consultants (name, phone, career, qualification, image) VALUES (?, ?, ?, ?, ?)',
+      'INSERT INTO experts (expert_name, contact_number, specialization, qualifications, profile_image) VALUES (?, ?, ?, ?, ?)',
       [name, phone, career, qualification, image]
     );
 

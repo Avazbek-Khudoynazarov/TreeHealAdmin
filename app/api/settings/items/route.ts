@@ -5,7 +5,9 @@ import { query } from '@/lib/db';
 export async function GET() {
   try {
     const items = await query(
-      'SELECT * FROM detail_items ORDER BY display_order ASC'
+      `SELECT item_id as id, item_name as title, item_icon as icon,
+              display_order, is_active, created_at, updated_at
+       FROM detail_items ORDER BY display_order ASC`
     );
     return NextResponse.json(items);
   } catch (error) {
@@ -33,7 +35,7 @@ export async function PUT(request: NextRequest) {
     // Update each item
     for (const item of items) {
       await query(
-        'UPDATE detail_items SET title = ?, icon = ? WHERE id = ?',
+        'UPDATE detail_items SET item_name = ?, item_icon = ? WHERE item_id = ?',
         [item.title, item.icon, item.id]
       );
     }
