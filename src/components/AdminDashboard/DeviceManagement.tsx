@@ -12,6 +12,18 @@ interface Device {
   created_at: string;
 }
 
+interface Expert {
+  expert_id: number;
+  expert_name: string;
+  is_fixed: boolean;
+}
+
+interface SelectedExpert {
+  expert_id: number;
+  expert_name: string;
+  is_fixed: boolean;
+}
+
 export default function DeviceManagement() {
   const [devices, setDevices] = useState<Device[]>([]);
   const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
@@ -23,6 +35,8 @@ export default function DeviceManagement() {
   const [searchInput, setSearchInput] = useState("");
   const [showExpertModal, setShowExpertModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [availableExperts, setAvailableExperts] = useState<Expert[]>([]);
+  const [selectedExpertIds, setSelectedExpertIds] = useState<number[]>([]);
   const [formData, setFormData] = useState({
     account: "",
     ssaid: "",
@@ -30,49 +44,19 @@ export default function DeviceManagement() {
     experts: [] as string[],
   });
 
-  const availableExperts = [
-    "홍길동(고정)",
-    "김진수",
-    "송이나",
-    "박성우",
-    "이연준",
-    "최영호",
-    "정다혜",
-    "윤성영",
-    "오민지",
-    "정상훈",
-    "김래리",
-    "한준석",
-    "서지훈",
-    "김민아",
-    "조현우",
-    "배소연",
-    "임태호",
-    "문현동",
-    "안지은",
-    "신동욱",
-    "권민정",
-    "김도훈",
-    "박근재",
-    "이세은",
-    "최서영",
-    "홍승민",
-    "정우진",
-    "장동욱",
-    "박소민",
-    "오세준",
-    "윤다현",
-    "김민성",
-    "이가은",
-    "한상우",
-    "정민지",
-    "박종현",
-    "서유나",
-    "정호석",
-    "김소연",
-    "이재민",
-    "강지훈",
-  ];
+  // Fetch experts from API
+  const fetchExperts = async () => {
+    try {
+      const response = await fetch('/api/experts');
+      const data = await response.json();
+
+      if (data.success) {
+        setAvailableExperts(data.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch experts:', error);
+    }
+  };
 
   // Fetch devices from API
   const fetchDevices = async () => {
@@ -107,30 +91,29 @@ export default function DeviceManagement() {
 
   useEffect(() => {
     fetchDevices();
+    fetchExperts();
   }, [currentPage, searchQuery]);
 
-  const handleExpertToggle = (expert: string) => {
-    const isFixed = expert.includes("(고정)");
-    let newExperts = [
-      ...(isNewDevice ? formData.experts : selectedDevice?.experts || []),
-    ];
+  const handleExpertToggle = (expertId: number, isFixed: boolean) => {
+    let newExpertIds = [...selectedExpertIds];
 
-    if (newExperts.includes(expert)) {
-      newExperts = newExperts.filter((e) => e !== expert);
+    if (newExpertIds.includes(expertId)) {
+      newExpertIds = newExpertIds.filter((id) => id !== expertId);
     } else {
       if (isFixed) {
-        newExperts = newExperts.filter((e) => !e.includes("(고정)"));
-        newExperts.unshift(expert);
+        // Remove other fixed experts (only one fixed allowed)
+        const fixedExpert = availableExperts.find(e => e.expert_id === expertId);
+        newExpertIds = newExpertIds.filter((id) => {
+          const expert = availableExperts.find(e => e.expert_id === id);
+          return expert && !expert.is_fixed;
+        });
+        newExpertIds.unshift(expertId);
       } else {
-        newExperts.push(expert);
+        newExpertIds.push(expertId);
       }
     }
 
-    if (isNewDevice) {
-      setFormData({ ...formData, experts: newExperts });
-    } else if (selectedDevice) {
-      setSelectedDevice({ ...selectedDevice, experts: newExperts });
-    }
+    setSelectedExpertIds(newExpertIds);
   };
 
   const handleSearch = () => {
@@ -140,12 +123,26 @@ export default function DeviceManagement() {
 
   const handleSave = async () => {
     try {
+      // Convert expert IDs to expert objects with display info
+      const expertsData = selectedExpertIds.map(id => {
+        const expert = availableExperts.find(e => e.expert_id === id);
+        return {
+          expert_id: id,
+          display_type: expert?.is_fixed ? 'fixed' : 'random'
+        };
+      });
+
       if (isNewDevice) {
         // Create new device
         const response = await fetch("/api/devices", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
+          body: JSON.stringify({
+            ssaid: formData.ssaid,
+            device_name: formData.device_name,
+            device_type: null,
+            experts: expertsData
+          }),
         });
 
         if (!response.ok) {
@@ -161,10 +158,11 @@ export default function DeviceManagement() {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            account: selectedDevice.account,
             ssaid: selectedDevice.ssaid,
             device_name: selectedDevice.device_name,
-            experts: selectedDevice.experts,
+            device_type: null,
+            status: 'active',
+            experts: expertsData
           }),
         });
 
@@ -180,6 +178,7 @@ export default function DeviceManagement() {
       // Refresh data and close form
       setSelectedDevice(null);
       setIsNewDevice(false);
+      setSelectedExpertIds([]);
       setFormData({ account: "", ssaid: "", device_name: "", experts: [] });
       fetchDevices();
     } catch (error) {
@@ -211,14 +210,37 @@ export default function DeviceManagement() {
     }
   };
 
+  // Load device expert mappings when editing
+  const loadDeviceExperts = async (deviceId: number) => {
+    try {
+      const response = await fetch(`/api/experts/device/${deviceId}`);
+      const data = await response.json();
+
+      if (data.success && Array.isArray(data.data)) {
+        const expertIds = data.data.map((expert: Expert) => expert.expert_id);
+        setSelectedExpertIds(expertIds);
+      }
+    } catch (error) {
+      console.error('Failed to load device experts:', error);
+      setSelectedExpertIds([]);
+    }
+  };
+
+  const handleEditDevice = (device: Device) => {
+    setSelectedDevice(device);
+    loadDeviceExperts(device.id);
+  };
+
   const handleNewDevice = () => {
     setIsNewDevice(true);
+    setSelectedExpertIds([]);
     setFormData({ account: "", ssaid: "", device_name: "", experts: [] });
   };
 
   const handleCancel = () => {
     setSelectedDevice(null);
     setIsNewDevice(false);
+    setSelectedExpertIds([]);
     setFormData({ account: "", ssaid: "", device_name: "", experts: [] });
   };
 
@@ -333,11 +355,16 @@ export default function DeviceManagement() {
                   선택하기
                 </button>
                 <div className={styles.expertTags}>
-                  {currentData.experts.map((expert, idx) => (
-                    <span key={idx} className={styles.expertTag}>
-                      {expert}
-                    </span>
-                  ))}
+                  {selectedExpertIds.map((expertId) => {
+                    const expert = availableExperts.find(e => e.expert_id === expertId);
+                    if (!expert) return null;
+                    const expertDisplay = expert.is_fixed ? `${expert.expert_name}(고정)` : expert.expert_name;
+                    return (
+                      <span key={expertId} className={styles.expertTag}>
+                        {expertDisplay}
+                      </span>
+                    );
+                  })}
                 </div>
               </td>
             </tr>
@@ -378,18 +405,21 @@ export default function DeviceManagement() {
               onClick={(e) => e.stopPropagation()}>
               <h3 className={styles.modalTitle}>전문가 선택</h3>
               <div className={styles.expertGrid}>
-                {availableExperts.map((expert, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => handleExpertToggle(expert)}
-                    className={`${styles.expertButton} ${
-                      currentData.experts.includes(expert)
-                        ? styles.expertButtonActive
-                        : ""
-                    }`}>
-                    {expert}
-                  </button>
-                ))}
+                {availableExperts.map((expert) => {
+                  const expertDisplay = expert.is_fixed ? `${expert.expert_name}(고정)` : expert.expert_name;
+                  return (
+                    <button
+                      key={expert.expert_id}
+                      onClick={() => handleExpertToggle(expert.expert_id, expert.is_fixed)}
+                      className={`${styles.expertButton} ${
+                        selectedExpertIds.includes(expert.expert_id)
+                          ? styles.expertButtonActive
+                          : ""
+                      }`}>
+                      {expertDisplay}
+                    </button>
+                  );
+                })}
               </div>
               <div className={styles.modalButtons}>
                 <button
@@ -471,7 +501,7 @@ export default function DeviceManagement() {
                   <td className={styles.td}>{formatDate(item.created_at)}</td>
                   <td className={styles.tdCenter}>
                     <button
-                      onClick={() => setSelectedDevice(item)}
+                      onClick={() => handleEditDevice(item)}
                       className={styles.editLink}>
                       [수정]
                     </button>

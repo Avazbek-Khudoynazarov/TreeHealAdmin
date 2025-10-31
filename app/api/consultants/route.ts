@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query } from '@/lib/db';
+import { corsHeaders } from '@/lib/cors';
+
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders() });
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -40,12 +45,12 @@ export async function GET(request: NextRequest) {
       page,
       limit,
       totalPages: Math.ceil(total / limit)
-    });
+    }, { headers: corsHeaders() });
   } catch (error) {
     console.error('Database error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch consultants' },
-      { status: 500 }
+      { status: 500, headers: corsHeaders() }
     );
   }
 }
@@ -62,13 +67,13 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       { message: 'Consultant created successfully', result },
-      { status: 201 }
+      { status: 201, headers: corsHeaders() }
     );
   } catch (error) {
     console.error('Database error:', error);
     return NextResponse.json(
       { error: 'Failed to create consultant' },
-      { status: 500 }
+      { status: 500, headers: corsHeaders() }
     );
   }
 }

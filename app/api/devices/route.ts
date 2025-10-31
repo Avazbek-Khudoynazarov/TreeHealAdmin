@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query } from '@/lib/db';
+import { corsHeaders } from '@/lib/cors';
+
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders() });
+}
 
 // GET - Fetch all devices with pagination and search
 export async function GET(request: NextRequest) {
@@ -15,9 +20,9 @@ export async function GET(request: NextRequest) {
     const params: any[] = [];
 
     if (searchQuery) {
-      whereClause = 'WHERE account LIKE ? OR ssaid LIKE ? OR device_name LIKE ?';
+      whereClause = 'WHERE ssaid LIKE ? OR device_name LIKE ?';
       const searchPattern = `%${searchQuery}%`;
-      params.push(searchPattern, searchPattern, searchPattern);
+      params.push(searchPattern, searchPattern);
     }
 
     // Get total count
@@ -27,18 +32,36 @@ export async function GET(request: NextRequest) {
 
     // Get paginated data
     const dataQuery = `
-      SELECT device_id as id, account, ssaid, device_name, experts, registered_at as created_at
-      FROM devices
+      SELECT
+        d.device_id as id,
+        d.device_name,
+        d.ssaid,
+        d.device_type,
+        d.registered_at as created_at,
+        d.status
+      FROM devices d
       ${whereClause}
-      ORDER BY device_id DESC
+      ORDER BY d.device_id DESC
       LIMIT ? OFFSET ?
     `;
     const devices: any = await query(dataQuery, [...params, limit, offset]);
 
-    // Parse JSON experts field
-    const parsedDevices = devices.map((device: any) => ({
-      ...device,
-      experts: typeof device.experts === 'string' ? JSON.parse(device.experts) : device.experts
+    // Fetch expert names for each device from device_expert_mapping
+    const parsedDevices = await Promise.all(devices.map(async (device: any) => {
+      const expertQuery = `
+        SELECT e.expert_name
+        FROM device_expert_mapping dem
+        JOIN experts e ON dem.expert_id = e.expert_id
+        WHERE dem.device_id = ?
+        ORDER BY dem.display_order
+      `;
+      const expertsResult: any = await query(expertQuery, [device.id]);
+      const expertNames = expertsResult.map((e: any) => e.expert_name);
+
+      return {
+        ...device,
+        experts: expertNames
+      };
     }));
 
     return NextResponse.json({
@@ -47,10 +70,10 @@ export async function GET(request: NextRequest) {
       page,
       limit,
       totalPages: Math.ceil(total / limit)
-    });
+    }, { headers: corsHeaders() });
   } catch (error) {
     console.error('Database error:', error);
-    return NextResponse.json({ error: 'Failed to fetch devices' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch devices' }, { status: 500, headers: corsHeaders() });
   }
 }
 
@@ -58,31 +81,43 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { account, ssaid, device_name, experts } = body;
+    const { ssaid, device_name, device_type, experts } = body;
 
     // Validate required fields
-    if (!account || !ssaid || !device_name) {
+    if (!ssaid || !device_name) {
       return NextResponse.json(
         { error: 'Missing required fields' },
-        { status: 400 }
+        { status: 400, headers: corsHeaders() }
       );
     }
 
     // Insert new device
     const insertQuery = `
-      INSERT INTO devices (account, ssaid, device_name, experts)
-      VALUES (?, ?, ?, ?)
+      INSERT INTO devices (ssaid, device_name, device_type, status)
+      VALUES (?, ?, ?, 'active')
     `;
-    const expertsJson = JSON.stringify(experts || []);
 
-    await query(insertQuery, [account, ssaid, device_name, expertsJson]);
+    const result: any = await query(insertQuery, [ssaid, device_name, device_type || null]);
+    const deviceId = result.insertId;
 
-    return NextResponse.json({ message: 'Device created successfully' }, { status: 201 });
+    // Insert device-expert mappings if experts are provided
+    if (experts && Array.isArray(experts) && experts.length > 0) {
+      for (let i = 0; i < experts.length; i++) {
+        const expert = experts[i];
+        await query(
+          `INSERT INTO device_expert_mapping (device_id, expert_id, display_type, display_order)
+           VALUES (?, ?, ?, ?)`,
+          [deviceId, expert.expert_id, expert.display_type || 'random', i + 1]
+        );
+      }
+    }
+
+    return NextResponse.json({ message: 'Device created successfully', device_id: deviceId }, { status: 201, headers: corsHeaders() });
   } catch (error: any) {
     console.error('Database error:', error);
     if (error.code === 'ER_DUP_ENTRY') {
-      return NextResponse.json({ error: 'SSAID already exists' }, { status: 409 });
+      return NextResponse.json({ error: 'SSAID already exists' }, { status: 409, headers: corsHeaders() });
     }
-    return NextResponse.json({ error: 'Failed to create device' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to create device' }, { status: 500, headers: corsHeaders() });
   }
 }

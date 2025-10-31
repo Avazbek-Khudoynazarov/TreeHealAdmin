@@ -9,7 +9,7 @@ export async function GET() {
   try {
     const categories = await query(
       `SELECT category_id as id, category_name as title, category_icon as icon,
-              display_order, created_at, updated_at
+              completion_message as description, display_order, created_at, updated_at
        FROM consultation_categories ORDER BY display_order ASC`
     );
     return NextResponse.json(categories);
@@ -38,8 +38,8 @@ export async function PUT(request: NextRequest) {
     // Update each category
     for (const category of categories) {
       await query(
-        'UPDATE consultation_categories SET category_name = ?, category_icon = ? WHERE category_id = ?',
-        [category.title, category.icon, category.id]
+        'UPDATE consultation_categories SET category_name = ?, category_icon = ?, completion_message = ? WHERE category_id = ?',
+        [category.title, category.icon, category.description, category.id]
       );
     }
 
