@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query } from '@/lib/db';
 
+// Force dynamic rendering to support PUT method
+export const dynamic = 'force-dynamic';
+
 // GET - Fetch all detail items
 export async function GET() {
   try {
